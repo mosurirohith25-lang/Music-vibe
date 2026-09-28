@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Vibe Admin Login</title>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      background: #111;
+      font-family: Arial, sans-serif;
+    }
+
+    .login-box {
+      width: 90%;
+      max-width: 380px;
+
+      padding: 30px;
+
+      background: #1d1d1d;
+
+      border-radius: 20px;
+
+      box-shadow:
+        0 0 30px rgba(255,255,255,0.08);
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #aaa;
+
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+
+      color: white;
+
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+
+      padding: 14px;
+
+      margin-bottom: 18px;
+
+      border: none;
+      border-radius: 10px;
+
+      background: #2b2b2b;
+
+      color: white;
+
+      font-size: 16px;
+
+      outline: none;
+    }
+
+    input:focus {
+      outline: 2px solid #ff7a00;
+    }
+
+    button {
+      width: 100%;
+
+      padding: 14px;
+
+      border: none;
+      border-radius: 10px;
+
+      background: #ff7a00;
+
+      color: white;
+
+      font-size: 17px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+    }
+
+    #message {
+      text-align: center;
+
+      margin-top: 18px;
+
+      color: #ff7777;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div class="login-box">
+
+    <h1>🎵 Vibe</h1>
+
+    <p class="subtitle">
+      Admin Login
+    </p>
+
+
+    <label>Email</label>
+
+    <input
+      type="email"
+      id="email"
+      placeholder="Enter admin email"
+      autocomplete="email"
+    >
+
+
+    <label>Password</label>
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Enter password"
+      autocomplete="current-password"
+    >
+
+
+    <button id="loginBtn">
+      Login
+    </button>
+
+
+    <p id="message"></p>
+
+  </div>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://hetulenjimniliyjfaqg.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_2cKtROybMrtjyvvtOHT1Jw_N07HkAh2";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+const emailInput =
+  document.getElementById("email");
+
+const passwordInput =
+  document.getElementById("password");
+
+const loginBtn =
+  document.getElementById("loginBtn");
+
+const message =
+  document.getElementById("message");
+
+
+loginBtn.addEventListener("click", login);
+
+
+async function login() {
+
+  const email =
+    emailInput.value.trim();
+
+  const password =
+    passwordInput.value;
+
+
+  message.textContent = "";
+
+
+  if (!email || !password) {
+
+    message.textContent =
+      "Please enter email and password.";
+
+    return;
+  }
+
+
+  loginBtn.disabled = true;
+
+  loginBtn.textContent =
+    "Logging in...";
+
+
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email: email,
+
+      password: password
+
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    message.textContent =
+      "Login failed. Check your email and password.";
+
+    loginBtn.disabled = false;
+
+    loginBtn.textContent =
+      "Login";
+
+    return;
+  }
+
+
+  if (data.session) {
+
+    window.location.href =
+      "admin.html";
+
+  }
+
+}
+
+</script>
+
+</body>
+
+</html>
